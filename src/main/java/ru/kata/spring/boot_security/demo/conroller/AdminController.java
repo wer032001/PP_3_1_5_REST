@@ -3,13 +3,13 @@ package ru.kata.spring.boot_security.demo.conroller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.entity.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
-@Controller
+@RestController
+@RequestMapping("/admin")
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('ADMIN')")
 public class AdminController {
@@ -17,13 +17,12 @@ public class AdminController {
 
     public static String mail;
 
-    @PostMapping("/admin")
-    public String addUser(@ModelAttribute("user") User user) {
-        userService.addUser(user);
-        return "redirect:/admin";
+    @PostMapping
+    public User addUser(@RequestBody User user) {
+        return userService.addUser(user);
     }
 
-    @GetMapping("/admin")
+    @GetMapping
     public String getAllUsers(Model model) {
         model.addAttribute("users", userService.listUsers());
         model.addAttribute("useremail", userService.getUserByEmail(mail));
@@ -31,13 +30,13 @@ public class AdminController {
         return "index";
     }
 
-    @GetMapping("/admin/{id}")
+    @GetMapping("/{id}")
     public String deleteUser(@PathVariable Long id) {
         userService.removeUser(id);
         return "redirect:/admin";
     }
 
-    @GetMapping("/admin/getOne")
+    @GetMapping("/getOne")
     @ResponseBody
     public User getOne(Long id) {
         return userService.getUserById(id);
