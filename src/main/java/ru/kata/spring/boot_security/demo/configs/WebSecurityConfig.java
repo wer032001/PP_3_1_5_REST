@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.configs;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -11,31 +12,34 @@ import ru.kata.spring.boot_security.demo.security.UserDetailsServiceImp;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    private final SuccessUserHandler successUserHandler;
 
-   private final UserDetailsServiceImp userDetailsServiceImp;
+  private final UserDetailsServiceImp userDetailsServiceImp;
 
-    public WebSecurityConfig(SuccessUserHandler successUserHandler, UserDetailsServiceImp userDetailsServiceImp) {
-        this.successUserHandler = successUserHandler;
-        this.userDetailsServiceImp = userDetailsServiceImp;
-    }
+  private final SuccessUserHandler successUserHandler;
+
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
-                .anyRequest().authenticated()
-                .and()
-                .formLogin().successHandler(successUserHandler)
-                .permitAll()
-                .and()
-                .logout()
+       http
+//               .cors().disable()
+               .csrf().disable()
+               .authorizeRequests()
+               .antMatchers("admin/**")
+
+//                .anyRequest()
+//               .authenticated()
+//               .and().formLogin().successHandler(successUserHandler)
+//                .permitAll()
+//                .and()
+//                .logout()
                 .permitAll();
     }
 
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
       auth.userDetailsService(userDetailsServiceImp).passwordEncoder(NoOpPasswordEncoder.getInstance());
-    }
+   }
 }
