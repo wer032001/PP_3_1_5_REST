@@ -29,14 +29,12 @@ public class AdminController {
 
     @PostMapping
     public User addUser(@RequestBody User user) {
-        userService.addUser(user);
-        return user;
+       return userService.addUser(user);
     }
 
     @PutMapping
     public User editUser(@RequestBody User user) {
-        userService.addUser(user);
-        return user;
+       return userService.addUser(user);
     }
 
     @DeleteMapping("/{id}")

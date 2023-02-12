@@ -23,7 +23,7 @@ public class SuccessUserHandler implements AuthenticationSuccessHandler {
 //            AdminController.mail = user.getEmail();
             httpServletResponse.sendRedirect("/admin");
         } else {
-            httpServletResponse.sendRedirect("/user/" + user.getEmail());
+            httpServletResponse.sendRedirect("/user");
         }
     }
 }
